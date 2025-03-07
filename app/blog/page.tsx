@@ -1,21 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from 'next/navigation';
-import { createServerClient } from './lib/supabase';
+import styles from "../page.module.css";
 
-import styles from "./page.module.css";
-
-export default async function Home() {
-  const supabase = createServerClient();
-
-    // Проверяем авторизацию на сервере
-    const { data: { session } } = await supabase.auth.getSession();
-  
-    if (session) {
-      // Если пользователь авторизован, перенаправляем на страницу чата
-      redirect('/chat');
-    }
-
+export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -27,28 +14,42 @@ export default async function Home() {
           height={38}
           priority
         />
-       <h1 className="mt-6 text-3xl font-extrabold text-gray-900">Общение с Yandex GPT</h1>
-       <p>Задавайте вопросы и получайте ответы от искусственного интеллекта Yandex</p>
-
         <ol>
           <li>
-            Get started go to <code>chat page</code>.
+            Get started by editing <code>app/page.tsx</code>.
           </li>
-          <li>Sing Up or Login</li>
-          <li>Start chatting with YaGPT 5 Pro Ultra Violet</li>
+          <li>Save and see your changes instantly.</li>
+          <li>Make more code</li>
         </ol>
 
         <div className={styles.ctas}>
-          <Link
-            href='/auth/login'
-            className={styles.primary} >
-            Войти
-          </Link>
-          <Link
-            href='/auth/register'
-            className={styles.secondary} >
-            Зарегистрироваться
-          </Link>
+            <Link 
+            href='/'
+            className={styles.secondary}
+            >Домой</Link>
+          <a
+            className={styles.primary}
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className={styles.logo}
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={20}
+              height={20}
+            />
+            Go to Home
+          </a>
+          <a
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.secondary}
+          >
+            Read our docs
+          </a>
         </div>
       </main>
       <footer className={styles.footer}>
