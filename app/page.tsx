@@ -1,100 +1,68 @@
-import Image from "next/image";
-import Link from "next/link";
-import { redirect } from 'next/navigation';
-import { createServerClient } from './lib/supabase';
+// app/pages/page.tsx
+"use client"
 
-import styles from "./page.module.css";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // Импорт из navigation, а не router
+import Link from 'next/link';
+import { LoginForm } from './auth/LoginForm';
+import { useAuth } from './contexts/AuthContext';
 
-export default async function Home() {
-  const supabase = createServerClient();
+export default function LoginPage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
+  const [clientLoading, setClientLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
-    // Проверяем авторизацию на сервере
-    const { data: { session } } = await supabase.auth.getSession();
-  
-    if (session) {
-      // Если пользователь авторизован, перенаправляем на страницу чата
-      redirect('/chat');
+  useEffect(() => {
+    setIsMounted(true);
+    
+    if (!loading) {
+      setClientLoading(false);
+      if (user && isMounted) {
+        router.push('/chat');
+      }
     }
+  }, [user, loading, router, isMounted]);
+
+  if (loading || clientLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-       <h1 className="mt-6 text-3xl font-extrabold text-gray-900">Общение с Yandex GPT</h1>
-       <p>Задавайте вопросы и получайте ответы от искусственного интеллекта Yandex</p>
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h1 className="text-center text-3xl font-extrabold text-gray-900">Yandex GPT Chat</h1>
+        <h2 className="mt-2 text-center text-xl text-gray-600">Войдите в свой аккаунт</h2>
+      </div>
 
-        <ol>
-          <li>
-            Get started go to <code>chat page</code>.
-          </li>
-          <li>Sing Up or Login</li>
-          <li>Start chatting with YaGPT 5 Pro Ultra Violet</li>
-        </ol>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <LoginForm />
+          
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Нет аккаунта?
+                </span>
+              </div>
+            </div>
 
-        <div className={styles.ctas}>
-          <Link
-            href='/auth/login'
-            className={styles.primary} >
-            Войти
-          </Link>
-          <Link
-            href='/auth/register'
-            className={styles.secondary} >
-            Зарегистрироваться
-          </Link>
+            <div className="mt-6">
+              <Link href="/auth/register" className="w-full flex justify-center py-2 px-4 border border-blue-500 rounded-md shadow-sm text-sm font-medium text-blue-500 hover:bg-blue-50">
+                Зарегистрироваться
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }

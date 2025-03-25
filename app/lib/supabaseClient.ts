@@ -1,17 +1,21 @@
+// app/lib/supabaseClient.ts (альтернативный вариант)
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from './database.types'; // Вы можете сгенерировать типы с помощью Supabase CLI
+import { createClient } from '@supabase/supabase-js';
 
-// Создаем клиент для компонентов
-export const supabase = createClientComponentClient<Database>({
-  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  options: {
+// Клиент с настройками по умолчанию для компонентов
+export const supabase = createClientComponentClient();
+
+// Если нужны дополнительные опции аутентификации, используйте createClient
+export const supabaseWithOptions = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
     auth: {
-      persistSession: true, // Убедитесь, что сессия сохраняется в локальном хранилище
-      autoRefreshToken: true, // Автоматически обновлять токен
-      detectSessionInUrl: true // Определять сессию из URL (для OAuth)
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
     }
   }
-});
+);
