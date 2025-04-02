@@ -15,7 +15,7 @@ export const supabase = createClientComponentClient({
 export const createServerClient = () => {
   return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
-      persistSession: false
+      persistSession: true
     }
   });
 };

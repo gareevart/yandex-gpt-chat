@@ -9,11 +9,13 @@ import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import { Message, Conversation } from '../../types';
 import { ApiKeyForm } from '../profile/ApiKeyForm';
+import './ChatInterface.page.css';
 
 export const ChatInterface: React.FC = () => {
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, profile } = useAuth();
   const [showApiKeyForm, setShowApiKeyForm] = useState(false);
 
@@ -132,19 +134,41 @@ export const ChatInterface: React.FC = () => {
     }
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleConversationSelect = (id: string) => {
+    setSelectedConversationId(id);
+    setIsSidebarOpen(false); // Close sidebar on mobile after selection
+  };
+
   return (
-    <div className="flex h-screen bg-white">
-      <div className="w-64 border-r">
+    <div className="chat-container">
+      {!isSidebarOpen && (
+        <button className="burger-menu" onClick={toggleSidebar}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      )}
+
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <button className="close-menu" onClick={toggleSidebar}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
         <ConversationList
           selectedConversationId={selectedConversationId}
-          onSelect={setSelectedConversationId}
+          onSelect={handleConversationSelect}
           onNewConversation={createNewConversation}
         />
       </div>
       
-      <div className="flex-1 flex flex-col">
+      <div className="main-content">
         {showApiKeyForm ? (
-          <div className="flex-1 flex items-center justify-center p-6">
+          <div className="welcome-container">
             <ApiKeyForm />
           </div>
         ) : (
@@ -158,13 +182,13 @@ export const ChatInterface: React.FC = () => {
                 />
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center p-6">
-                <div className="text-center space-y-4">
-                  <h2 className="text-2xl font-bold">Добро пожаловать в чат с Yandex GPT</h2>
-                  <p className="text-gray-600">Выберите существующий диалог или создайте новый</p>
+              <div className="welcome-container">
+                <div className="welcome-content">
+                  <h2 className="welcome-title">Добро пожаловать в чат с Yandex GPT</h2>
+                  <p className="welcome-text">Выберите существующий диалог или создайте новый</p>
                   <button
                     onClick={createNewConversation}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="new-chat-button"
                   >
                     Новый диалог
                   </button>
