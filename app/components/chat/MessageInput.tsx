@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import './MessageInput.module.css';
 
 interface MessageInputProps {
   onSendMessage: (content: string) => Promise<void>;
@@ -26,14 +27,14 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border-t">
-      <div className="flex rounded-lg border overflow-hidden">
+    <form onSubmit={handleSubmit} className="message-form">
+      <div className="input-container">
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           disabled={disabled || isSubmitting}
           placeholder={disabled ? "Для начала диалога необходимо добавить API ключ" : "Введите сообщение..."}
-          className="flex-1 px-4 py-2 outline-none resize-none"
+          className="message-textarea"
           rows={2}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -45,9 +46,9 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
         <button
           type="submit"
           disabled={!message.trim() || disabled || isSubmitting}
-          className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="send-button"
         >
-          Отправить
+          {isSubmitting ? 'Отправка...' : 'Отправить'}
         </button>
       </div>
     </form>
