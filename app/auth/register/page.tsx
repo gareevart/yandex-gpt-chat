@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { RegisterForm } from '../RegisterForm';
 import { createServerClient } from '../../lib/supabase';
-import '../auth.css';
+import styles from '../auth-forms.module.css';
 
 export default async function RegisterPage() {
   const supabase = createServerClient();
@@ -17,27 +17,27 @@ export default async function RegisterPage() {
   }
   
   return (
-    <div className="auth-container">
-      <div className="auth-header">
-        <h1 className="auth-title">Yandex GPT Chat</h1>
-        <h2 className="auth-subtitle">Создайте аккаунт</h2>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Yandex GPT Chat</h1>
+        <h2 className={styles.subtitle}>Создайте аккаунт</h2>
       </div>
 
-      <div className="auth-form-container">
-        <div className="auth-form-box">
+      <div className={styles.formContainer}>
+        <div className={styles.formBox}>
           <RegisterForm />
           
-          <div className="auth-divider">
-            <div className="auth-divider-line">
+          <div className={styles.divider}>
+            <div className={styles.dividerLine}>
               <div></div>
             </div>
-            <div className="auth-divider-text">
+            <div className={styles.dividerText}>
               <span>Уже есть аккаунт?</span>
             </div>
           </div>
 
-          <div className="auth-link-container">
-            <Link href="/auth/login" className="auth-link">
+          <div className={styles.linkContainer}>
+            <Link href="/auth/login" className={styles.link}>
               Войти
             </Link>
           </div>

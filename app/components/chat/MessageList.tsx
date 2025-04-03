@@ -2,7 +2,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Message } from '../../types';
 import ReactMarkdown from 'react-markdown';
-
 import styles from "./page.module.css";
 
 interface MessageListProps {
@@ -19,32 +18,26 @@ export const MessageList: React.FC<MessageListProps> = ({ messages, loading }) =
 
   if (messages.length === 0 && !loading) {
     return (
-      <div className="flex items-center justify-center h-full text-gray-500">
+      <div className={styles.emptyState}>
         Начните новый диалог с Yandex GPT
       </div>
     );
   }
 
   return (
-    <div className="p-4 overflow-y-auto flex-1">
+    <div className={styles.messageContainer}>
       {messages.map((message) => (
         <div
           key={message.id}
-          className={`mb-4 ${
-            message.role === 'user' ? 'text-right' : 'text-left'
-          }`}
+          className={message.role === 'user' ? styles.userMessageWrapper : styles.botMessageWrapper}
         >
           <div
-            className={`inline-block p-3 rounded-lg max-w-[80%] ${
-              message.role === 'user'
-                ? 'bg-blue-100 text-blue-900'
-                : 'bg-gray-100 text-gray-900'
-            }`}
+            className={message.role === 'user' ? styles.userMessage : styles.botMessage}
           >
-            <div className="text-xs font-bold mb-1">
+            <div className={styles.messageSender}>
               {message.role === 'user' ? 'Вы' : 'Yandex GPT'}
             </div>
-            <div className="prose">
+            <div className={styles.messageContent}>
               <ReactMarkdown>{message.content}</ReactMarkdown>
             </div>
           </div>
@@ -53,12 +46,12 @@ export const MessageList: React.FC<MessageListProps> = ({ messages, loading }) =
       
       {loading && (
         <div className={styles.left_message}>
-          <div className="inline-block p-3 rounded-lg bg-gray-100 text-gray-900">
-            <div className="text-xs font-bold mb-1">YaGPT</div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          <div className={styles.botMessage}>
+            <div className={styles.messageSender}>YaGPT</div>
+            <div className={styles.typingIndicator}>
+              <div className={styles.dot} style={{ animationDelay: '0ms' }}></div>
+              <div className={styles.dot} style={{ animationDelay: '150ms' }}></div>
+              <div className={styles.dot} style={{ animationDelay: '300ms' }}></div>
             </div>
           </div>
         </div>

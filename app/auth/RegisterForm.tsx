@@ -4,6 +4,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import styles from './auth-forms.module.css';
 
 export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -30,7 +32,6 @@ export const RegisterForm: React.FC = () => {
       await signUp(email, password);
       setSuccess(true);
       
-      // Перенаправляем на страницу входа после успешной регистрации
       setTimeout(() => {
         router.push('/auth/login');
       }, 2000);
@@ -43,63 +44,87 @@ export const RegisterForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-2xl font-bold">Регистрация</h2>
-      
-      {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{error}</div>}
-      {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-        Регистрация успешна! Проверьте вашу почту для подтверждения.
-      </div>}
-      
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium">
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-        />
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Регистрация</h1>
+        <p className={styles.subtitle}>Создайте новый аккаунт</p>
       </div>
       
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium">
-          Пароль
-        </label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-        />
+      <div className={styles.formContainer}>
+        <div className={styles.formBox}>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            {error && <div className={styles.error}>{error}</div>}
+            {success && <div className={styles.success}>
+              Регистрация успешна! Проверьте вашу почту для подтверждения.
+            </div>}
+            
+            <div className={styles.inputGroup}>
+              <label htmlFor="email" className={styles.label}>
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className={styles.input}
+              />
+            </div>
+            
+            <div className={styles.inputGroup}>
+              <label htmlFor="password" className={styles.label}>
+                Пароль
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className={styles.input}
+              />
+            </div>
+            
+            <div className={styles.inputGroup}>
+              <label htmlFor="confirmPassword" className={styles.label}>
+                Подтвердите пароль
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className={styles.input}
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading}
+              className={styles.button}
+            >
+              {loading ? 'Регистрация...' : 'Зарегистрироваться'}
+            </button>
+          </form>
+
+          <div className={styles.divider}>
+            <div className={styles.dividerLine}>
+              <div></div>
+            </div>
+            <div className={styles.dividerText}>
+              <span>или</span>
+            </div>
+          </div>
+
+          <div className={styles.linkContainer}>
+            <Link href="/auth/login" className={styles.link}>
+              Уже есть аккаунт? Войти
+            </Link>
+          </div>
+        </div>
       </div>
-      
-      <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium">
-          Подтвердите пароль
-        </label>
-        <input
-          id="confirmPassword"
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-        />
-      </div>
-      
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        {loading ? 'Регистрация...' : 'Зарегистрироваться'}
-      </button>
-    </form>
+    </div>
   );
 };
