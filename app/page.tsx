@@ -1,11 +1,12 @@
-// app/pages/page.tsx
+// app/page.tsx
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Импорт из navigation, а не router
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { LoginForm } from './auth/LoginForm';
 import { useAuth } from './contexts/AuthContext';
+import './page.styles.css';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,34 +35,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h1 className="text-center text-3xl font-extrabold text-gray-900">Yandex GPT Chat</h1>
-        <h2 className="mt-2 text-center text-xl text-gray-600">Войдите в свой аккаунт</h2>
-      </div>
-
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <LoginForm />
-          
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Нет аккаунта?
-                </span>
-              </div>
-            </div>
 
-            <div className="mt-6">
-              <Link href="/auth/register" className="w-full flex justify-center py-2 px-4 border border-blue-500 rounded-md shadow-sm text-sm font-medium text-blue-500 hover:bg-blue-50">
-                Зарегистрироваться
-              </Link>
-            </div>
+          <div className="mt-6">
           </div>
-        </div>
+
       </div>
     </div>
   );

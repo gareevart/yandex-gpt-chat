@@ -1,0 +1,271 @@
+/* styles.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6; /* bg-gray-100 */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .min-h-screen {
+    min-height: 100vh;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .justify-center {
+    justify-content: center;
+  }
+  
+  .justify-between {
+    justify-content: space-between;
+  }
+  
+  .justify-around {
+    justify-content: space-around;
+  }
+  
+  .flex-col {
+    flex-direction: column;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-3xl {
+    font-size: 1.875rem; /* 30px */
+    line-height: 2.25rem; /* 36px */
+  }
+  
+  .font-extrabold {
+    font-weight: 800;
+  }
+  
+  .text-gray-900 {
+    color: #1f2937;
+  }
+  
+  .mt-2 {
+    margin-top: 0.5rem; /* 8px */
+  }
+  
+  .text-xl {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.75rem; /* 28px */
+  }
+  
+  .text-gray-600 {
+    color: #4b5563;
+  }
+  
+  .mt-8 {
+    margin-top: 2rem; /* 32px */
+  }
+  
+  .pb-12 {
+    padding-bottom: 3rem; /* 48px */
+  }
+  
+  .py-12 {
+    padding-top: 3rem; /* 48px */
+    padding-bottom: 3rem; /* 48px */
+  }
+  
+  .px-6 {
+    padding-left: 1.5rem; /* 24px */
+    padding-right: 1.5rem; /* 24px */
+  }
+  
+  .lg\:px-8 {
+    padding-left: 2rem; /* 32px */
+    padding-right: 2rem; /* 32px */
+  }
+  
+  .sm\:max-w-md {
+    max-width: 36rem; /* 576px */
+  }
+  
+  .sm\:mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .sm\:w-full {
+    width: 100%;
+  }
+  
+  .h-12 {
+    height: 3rem; /* 48px */
+  }
+  
+  .w-12 {
+    width: 3rem; /* 48px */
+  }
+  
+  .border-t-2 {
+    border-top-width: 0.25rem; /* 4px */
+  }
+  
+  .border-b-2 {
+    border-bottom-width: 0.25rem; /* 4px */
+  }
+  
+  .border-blue-500 {
+    border-color: #6366f1; /* Tailwind blue-500 */
+  }
+  
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .bg-gray-100 {
+    background-color: #f3f4f6; /* Tailwind gray-100 */
+  }
+  
+  .bg-white {
+    background-color: #ffffff;
+  }
+  
+  .py-8 {
+    padding-top: 2rem; /* 32px */
+    padding-bottom: 2rem; /* 32px */
+  }
+  
+  .px-4 {
+    padding-left: 1rem; /* 16px */
+    padding-right: 1rem; /* 16px */
+  }
+  
+  .sm\:px-10 {
+    padding-left: 2.5rem; /* 40px */
+    padding-right: 2.5rem; /* 40px */
+  }
+  
+  .shadow {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sm\:rounded-lg {
+    border-radius: 0.5rem; /* 8px */
+  }
+  
+  .relative {
+    position: relative;
+  }
+  
+  .inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .border-t {
+    border-top-width: 1px;
+  }
+  
+  .border-gray-300 {
+    border-color: #d1d5db; /* Tailwind gray-300 */
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+  }
+  
+  .px-2 {
+    padding-left: 0.5rem; /* 8px */
+    padding-right: 0.5rem; /* 8px */
+  }
+  
+  .bg-white {
+    background-color: #FFFFFF;
+  }
+  
+  .text-gray-500 {
+    color: #6b7280; /* Tailwind gray-500 */
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .justify-center {
+    justify-content: center;
+  }
+  
+  .py-2 {
+    padding-top: 0.5rem; /* 8px */
+    padding-bottom: 0.5rem; /* 8px */
+  }
+  
+  .px-4 {
+    padding-left: 1rem; /* 16px */
+    padding-right: 1rem; /* 16px */
+  }
+  
+  .border {
+    border-width: 1px;
+  }
+  
+  .border-blue-500 {
+    border-color: #6366f1; /* Tailwind blue-500 */
+  }
+  
+  .rounded-md {
+    border-radius: 0.375rem; /* 6px */
+  }
+  
+  .shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .text-sm {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+  }
+  
+  .font-medium {
+    font-weight: 500;
+  }
+  
+  .text-blue-500 {
+    color: #6366f1; /* Tailwind blue-500 */
+  }
+  
+  .hover\:bg-blue-50:hover {
+    background-color: #4f46e5; /* Tailwind blue-500 darker */
+  }
+  

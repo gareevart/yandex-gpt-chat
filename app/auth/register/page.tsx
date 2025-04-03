@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { RegisterForm } from '../RegisterForm';
 import { createServerClient } from '../../lib/supabase';
-import styles from '../auth-forms.module.css';
+import '../../page.styles.css';
 
 export default async function RegisterPage() {
   const supabase = createServerClient();
@@ -17,31 +17,9 @@ export default async function RegisterPage() {
   }
   
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Yandex GPT Chat</h1>
-        <h2 className={styles.subtitle}>Создайте аккаунт</h2>
-      </div>
-
-      <div className={styles.formContainer}>
-        <div className={styles.formBox}>
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <RegisterForm />
-          
-          <div className={styles.divider}>
-            <div className={styles.dividerLine}>
-              <div></div>
-            </div>
-            <div className={styles.dividerText}>
-              <span>Уже есть аккаунт?</span>
-            </div>
-          </div>
-
-          <div className={styles.linkContainer}>
-            <Link href="/auth/login" className={styles.link}>
-              Войти
-            </Link>
-          </div>
-        </div>
       </div>
     </div>
   );
