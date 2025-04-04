@@ -7,6 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { ConversationList } from './ConversationList';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
+import { ShareChatButton } from './ShareChatButton'; // Добавляем импорт нового компонента
 import { Message, Conversation } from '../../types';
 import { ApiKeyForm } from '../profile/ApiKeyForm';
 import './ChatInterface.page.css';
@@ -18,6 +19,13 @@ export const ChatInterface: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, profile } = useAuth();
   const [showApiKeyForm, setShowApiKeyForm] = useState(false);
+  // Добавляем состояние для информации о выбранном разговоре
+  const [selectedConversation, setSelectedConversation] = useState<{
+    id: string;
+    title: string;
+    share_id: string | null;
+    is_shared: boolean;
+  } | null>(null);
 
   useEffect(() => {
     if (!profile?.yandex_api_key) {
@@ -28,23 +36,41 @@ export const ChatInterface: React.FC = () => {
   }, [profile?.yandex_api_key]);
 
   useEffect(() => {
-    if (!selectedConversationId) return;
+    if (!selectedConversationId) {
+      setSelectedConversation(null);
+      return;
+    }
 
-    const fetchMessages = async () => {
-      const { data, error } = await supabase
+    // Обновленная функция для получения данных разговора и сообщений
+    const fetchConversationData = async () => {
+      // Получаем информацию о выбранном разговоре
+      const { data: conversationData, error: conversationError } = await supabase
+        .from('conversations')
+        .select('id, title, share_id, is_shared')
+        .eq('id', selectedConversationId)
+        .single();
+
+      if (conversationError) {
+        console.error('Error fetching conversation:', conversationError);
+      } else {
+        setSelectedConversation(conversationData);
+      }
+
+      // Получаем сообщения
+      const { data: messagesData, error: messagesError } = await supabase
         .from('messages')
         .select('*')
         .eq('conversation_id', selectedConversationId)
         .order('created_at', { ascending: true });
 
-      if (error) {
-        console.error('Error fetching messages:', error);
+      if (messagesError) {
+        console.error('Error fetching messages:', messagesError);
       } else {
-        setMessages(data as Message[]);
+        setMessages(messagesData as Message[]);
       }
     };
 
-    fetchMessages();
+    fetchConversationData();
 
     // Подписываемся на изменения сообщений
     const subscription = supabase
@@ -65,8 +91,22 @@ export const ChatInterface: React.FC = () => {
       })
       .subscribe();
 
+    // Подписываемся на изменения в самом разговоре (изменение share_id, is_shared и т.д.)
+    const conversationSubscription = supabase
+      .channel(`conversation_${selectedConversationId}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'conversations',
+        filter: `id=eq.${selectedConversationId}`,
+      }, () => {
+        fetchConversationData();
+      })
+      .subscribe();
+
     return () => {
       subscription.unsubscribe();
+      conversationSubscription.unsubscribe();
     };
   }, [selectedConversationId]);
 
@@ -78,6 +118,7 @@ export const ChatInterface: React.FC = () => {
       .insert({
         user_id: user.id,
         title: 'Новый диалог',
+        is_shared: false, // По умолчанию, чат не доступен по ссылке
       })
       .select()
       .single();
@@ -166,26 +207,44 @@ export const ChatInterface: React.FC = () => {
         />
       </div>
       
-      <div className="main-content">
+      <div className="chat-main">
+        {/* Добавляем панель с информацией о чате и кнопкой "Поделиться" */}
+        {selectedConversation && (
+        <div className="chat-header">
+          <div className="chat-title">
+            <h2>{selectedConversation.title}</h2>
+            {selectedConversation.is_shared && (
+              <span className="share-badge">Доступен для чтения</span>
+            )}
+          </div>
+          
+          <ShareChatButton
+            conversationId={selectedConversation.id}
+            shareId={selectedConversation.share_id}
+            isShared={selectedConversation.is_shared}
+          />
+          </div>
+        )}
+        
         {showApiKeyForm ? (
-          <div className="welcome-container">
+          <div className="api-key-form-container">
             <ApiKeyForm />
           </div>
         ) : (
           <>
             {selectedConversationId ? (
-              <>
+              <div className="messages-container">
                 <MessageList messages={messages} loading={loading} />
                 <MessageInput 
                   onSendMessage={sendMessage} 
                   disabled={!profile?.yandex_api_key || !selectedConversationId} 
                 />
-              </>
+              </div>
             ) : (
-              <div className="welcome-container">
+              <div className="welcome-screen">
                 <div className="welcome-content">
-                  <h2 className="welcome-title">Добро пожаловать в чат с Yandex GPT</h2>
-                  <p className="welcome-text">Выберите существующий диалог или создайте новый</p>
+                  <h2>Добро пожаловать в чат с Yandex GPT</h2>
+                  <p>Выберите существующий диалог или создайте новый</p>
                   <button
                     onClick={createNewConversation}
                     className="new-chat-button"
