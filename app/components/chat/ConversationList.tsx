@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase, createServerClient } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Conversation } from '../../types';
 import styles from './ConversationList.module.css';
@@ -63,11 +63,33 @@ export const ConversationList: React.FC<ConversationListProps> = ({
     };
   }, [user]);
 
+  const fetchConversations = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('conversations')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('updated_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching conversations:', error);
+    } else {
+      setConversations(data as Conversation[]);
+    }
+    setLoading(false);
+  };
+
+  // Simplified function to delete a conversation
   const deleteConversation = async (conversationId: string) => {
     if (!user) return;
     
     try {
-      // First delete all related messages
+      console.log('Starting deletion process for conversation:', conversationId);
+      
+      // Step 1: Delete all related messages
+      console.log('Deleting messages for conversation:', conversationId);
       const { error: messagesError } = await supabase
         .from('messages')
         .delete()
@@ -75,20 +97,26 @@ export const ConversationList: React.FC<ConversationListProps> = ({
         
       if (messagesError) {
         console.error('Error deleting messages:', messagesError);
+        alert('Ошибка при удалении сообщений. Пожалуйста, попробуйте еще раз.');
         return;
       }
       
-      // Then delete the conversation
-      const { error: conversationError } = await supabase
+      console.log('Messages deleted successfully');
+      
+      // Step 2: Delete the conversation
+      console.log('Deleting conversation:', conversationId);
+      const { error: deleteError } = await supabase
         .from('conversations')
         .delete()
-        .eq('id', conversationId)
-        .eq('user_id', user.id);
-        
-      if (conversationError) {
-        console.error('Error deleting conversation:', conversationError);
+        .eq('id', conversationId);
+      
+      if (deleteError) {
+        console.error('Error deleting conversation:', deleteError);
+        alert('Ошибка при удалении чата. Пожалуйста, попробуйте еще раз.');
         return;
       }
+      
+      console.log('Conversation deleted successfully');
       
       // If the deleted conversation was selected, clear selection
       if (selectedConversationId === conversationId) {
@@ -97,6 +125,9 @@ export const ConversationList: React.FC<ConversationListProps> = ({
       
       // Hide confirm dialog
       setShowDeleteConfirm(null);
+      
+      // Refresh the conversations list
+      await fetchConversations();
       
     } catch (error) {
       console.error('Error during deletion process:', error);

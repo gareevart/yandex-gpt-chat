@@ -32,6 +32,8 @@ export type Database = {
             title: string;
             created_at: string;
             updated_at: string;
+            share_id?: string | null;
+            is_shared: boolean;
           };
           Insert: {
             id?: string;
@@ -39,6 +41,8 @@ export type Database = {
             title?: string;
             created_at?: string;
             updated_at?: string;
+            share_id?: string | null;
+            is_shared?: boolean;
           };
           Update: {
             id?: string;
@@ -46,6 +50,8 @@ export type Database = {
             title?: string;
             created_at?: string;
             updated_at?: string;
+            share_id?: string | null;
+            is_shared?: boolean;
           };
         };
         messages: {
@@ -83,4 +89,3 @@ export type Database = {
       };
     };
   };
-  

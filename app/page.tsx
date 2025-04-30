@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { LoginForm } from './auth/LoginForm';
 import { useAuth } from './contexts/AuthContext';
 import './page.styles.css';
